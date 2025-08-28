@@ -1,0 +1,37 @@
+###########Project 1######################
+echo "Jose"                                                                                       # Print out "Jose" in terminal 
+mkdir Jose                                                                                        # Create folder titled "Jose"
+ls                                                                                                # Check if folder titled "Jose" was created 
+mkdir biocomputing && cd biocomputing                                                             # Create folder named "biocomputing" and change directory to it 
+wget https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype                        # Download first file
+wget https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.gbk                    # Download second file
+wget https://raw.githubusercontent.com/josoga2/dataset-repos/main/wildtype.gbk                    # Download third file 
+ls                                                                                                # Check if there are three downloaded files within directory 
+mv wildtype.fna ../Jose && ls ../Jose                                                             # Move "wildtype.fna" to folder titled "Jose" and check if it is there 
+rm wildtype.gbk.1 && ls                                                                           # Remove duplicate .gbk file and check if it is has been removed 
+cd ../Jose && grep 'tatatata' wildtype.fna                                                        # Change directory to "Jose" and check if there is any red highlighted text containing "tatatata"
+awk '/tatatata/ {print}' wildtype.fna > wildtype_match.fna && ls                                  # Print all lines containing "tatatata" and check if new file was generated
+grep 'tatatata' wildtype_match.fna                                                                # Check contents of new file if conditions are satisified  
+cd ../biocomputing && wc -l wildtype.gbk                                                          # Change directory to "biocomputing" and count number of lines in wildtype.gbk  
+grep 'LOCUS' wildtype.gbk                                                                         # Print sequence length in wildtype.gbk         
+grep 'SOURCE' wildtype.gbk                                                                        # Print source organism in wildtype.gbk
+grep '/gene=' wildtype.gbk                                                                        # List gene names in wildtype.gbk
+clear                                                                                             # Clear terminal space
+history                                                                                           # Print all commands used 
+ls && ls ../Jose                                                                                  # List files in folders "Jose" and "biocomputing" 
+
+###########Project 2######################
+conda activate                                                                                    # Activate base conda environment 
+conda create -n funtools python=3.10                                                              # Create "funtools" environment 
+conda activate funtools                                                                           # Activate "funtools" environment
+sudo apt-get install figlet                                                                       # Install figlet using apt-get 
+figlet "Jose"                                                                                     # Run figlet using "Jose"
+conda install bwa                                                                                 # Install bwa tool
+conda install blast                                                                               # Install blast tool
+conda install samtools                                                                            # Install samtools tool
+conda install bedtools                                                                            # Install bedtools tool
+conda install spades.py                                                                           # Install spades.py tool
+conda install bcftools                                                                            # Install bcftools tool
+conda install fastp                                                                               # Install fastp tool
+conda install multiqc                                                                             # Install multiqc tool
+conda list                                                                                        # Check if tools have been properly installed 
