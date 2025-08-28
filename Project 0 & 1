@@ -1,0 +1,4 @@
+echo "Jose" #Print out "Jose" in terminal 
+mkdir Jose #Create folder titled "Jose"
+ls # Check if folder titled "Jose" was created 
+mkdir biocomputing && cd biocomputing # Create folder named "biocomputing" and change directory to it 
