@@ -26,5 +26,12 @@ conda create -n funtools python=3.10                                            
 conda activate funtools                                                                           # Activate "funtools" environment
 sudo apt-get install figlet                                                                       # Install figlet using apt-get 
 figlet "Jose"                                                                                     # Run figlet using "Jose"
-conda install bwa blast samtools bedtools spades.py bcftools fastp multiqc                        # Install bwa, blast, samtools, bedtools, spades.py, bcftools, fastp, and multiqc bioinformatics tools
+conda install bwa                                                                                 # Install bwa tool
+conda install blast                                                                               # Install blast tool
+conda install samtools                                                                            # Install samtools tool
+conda install bedtools                                                                            # Install bedtools tool
+conda install spades.py                                                                           # Install spades.py tool
+conda install bcftools                                                                            # Install bcftools tool
+conda install fastp                                                                               # Install fastp tool
+conda install multiqc                                                                             # Install multiqc tool
 conda list                                                                                        # Check if tools have been properly installed 
