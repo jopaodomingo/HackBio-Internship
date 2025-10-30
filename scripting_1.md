@@ -1,4 +1,4 @@
-# Scripting
+# Project 2
 Bash scripts are sequences of commands executed by the Bash shell. They automate tasks and can be used to perform complex operations. Understanding Bash syntax is crucial for writing effective scripts.
 
 ## Basic Syntax
