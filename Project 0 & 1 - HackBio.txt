@@ -1,4 +1,4 @@
-###########Project 1######################
+###########Project 0######################
 echo "Jose"                                                                                       # Print out "Jose" in terminal 
 mkdir Jose                                                                                        # Create folder titled "Jose"
 ls                                                                                                # Check if folder titled "Jose" was created 
@@ -20,7 +20,7 @@ clear                                                                           
 history                                                                                           # Print all commands used 
 ls && ls ../Jose                                                                                  # List files in folders "Jose" and "biocomputing" 
 
-###########Project 2######################
+###########Project 1######################
 conda activate                                                                                    # Activate base conda environment 
 conda create -n funtools python=3.10                                                              # Create "funtools" environment 
 conda activate funtools                                                                           # Activate "funtools" environment
