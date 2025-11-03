@@ -8,7 +8,7 @@ In this project, we will be using Whole-Genome Sequencing (WGS) to analyze data 
 
 ## Methods
 ### Dataset
-The data set was obtained from a subset of 100 samples. Downsizing was done due to time constraints. Data was downloading from the following site: https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR270/016/SRR27013316/ using the curl command and stored in a directory entitled "raw_reads". Samples used include SRR27013147, SRR27013245, SRR27013246,..., SRR27013292, SRR27013293. 
+The data set was obtained from a subset of 100 samples. Downsizing to 50 samples was done due to time constraints. Data was downloading from the following site: https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR270/016/SRR27013316/ using the curl command and stored in a directory entitled "raw_reads". Samples used include SRR27013147, SRR27013245, SRR27013246,..., SRR27013292, SRR27013293. 
 
 ### FastQC implementation
 > nano run_fastQC.sh
@@ -67,6 +67,18 @@ for i in {147} {245...293}; do
 done
 
 ```
+The Bandage software was used to open the respectived .fastg files of each assembled genome. A random node with less than 200 bp was selected and inputted into the BLAST interface (https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE=MegaBlast&PROGRAM=blastn&PAGE_TYPE=BlastSearch&BLAST_SPEC=) to determine any matching reference genomes to identify the genome species.
+<center><figure>
+	<img width="1920" height="1032" alt="image" src="https://github.com/user-attachments/assets/9de5ffb8-952b-471e-b515-df1ff10c5004" />
+	<figcaption><center><i>Assembled genome for SRR27013260 using Bandage software</i></center></figcaption>
+</figure></center>
+<br> <br>
+<center><figure>
+	<img width="1895" height="958" alt="image" src="https://github.com/user-attachments/assets/2663f764-6c09-41df-afdb-847597a1f2a4" />
+	<figcaption><center><i>Blast output for SRR27013147</i></center></figcaption>
+</figure></center>
+<br> <br>
+
 Finally, to study antimcriobial resistance, AMR profile was obtained using abricate:
 ### AMR Profile
 > nano run_AMR.sh
@@ -82,12 +94,7 @@ done
 
 ```
 ## Results
-<center><figure>
-	<img width="1895" height="958" alt="image" src="https://github.com/user-attachments/assets/2663f764-6c09-41df-afdb-847597a1f2a4" />
-	<figcaption><center><i>Blast output for SRR27013147</i></center></figcaption>
-</figure></center>
-<br> <br>
-Using BLAST interface (https://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE=MegaBlast&PROGRAM=blastn&PAGE_TYPE=BlastSearch&BLAST_SPEC=), the genome involved was determined to be <i>Listeria monocytogenes</i> as it was determined in 49/50 samples. For sample SRR27013245, it was determined to be a sample of <i>Brucella anthropi</i> with 99.28% identity and 65% query cover. The viewer may look at the folder <b>BLAST Screenshots</b> for more information.
+The species involved was determined to be <i>Listeria monocytogenes</i> as it was determined in 49/50 samples. For sample SRR27013245, it was determined to be a sample of <i>Brucella anthropi</i> with 99.28% identity and 65% query cover. The viewer may look at the folder <b>BLAST Screenshots</b> for more information.
 
 The AMR Profile is then shown below. Complete results can be found in the excel file found in the folder repository. 
 <img width="1075" height="204" alt="image" src="https://github.com/user-attachments/assets/9cbc1d2c-8bf7-45d9-b30c-4f5d148a6998" />
