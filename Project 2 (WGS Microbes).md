@@ -4,7 +4,7 @@ In this project, we will be using Whole-Genome Sequencing (WGS) to analyze data 
 1) Confirm the identity of the organism
 2) Determine the antimicrobial resistance (AMR) profile of these pathogens.
 3) Detect if there might be a toxin that is accelerating the death rate
-4) Suggest antibiotics/treatment options that could be used to imaange the cases
+4) Suggest antibiotics/treatment options that could be used to manage the cases
 
 ## Methods
 ### Dataset
