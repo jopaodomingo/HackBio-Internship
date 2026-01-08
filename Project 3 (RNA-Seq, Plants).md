@@ -91,7 +91,101 @@ featureCounts -O -t gene -g ID -a genome/a_thaliana.gff3 -o counts/counts.txt IG
 ```
 The data is then uploaded to RStudio, where Differential Sequencing Analysis (DSeq2) is applied. 
 ```
-<insert code> 
+#set working directory
+setwd('/Users/Jopao/Desktop/Graduate School Applications/HackBio/Project 3')
+
+#libraries
+library(DESeq2) #For Differential Expression Analysis
+library(pheatmap) #For generation of heat map
+
+#count file; files must be found in wd
+c_e_count <- read.delim('counts.txt', header = T)
+c_e_meta <- read.delim('metadata.txt', header = T, stringsAsFactors = T)
+
+#preview (recheck the first few lines)
+head(c_e_count)
+head(c_e_meta)
+
+#keep to the important columns; only consider columns SRR12808497 to SRR12808529
+raw_counts <- c_e_count[, c("SRR12808497", "SRR12808498", "SRR12808499", "SRR12808527", "SRR12808528", "SRR12808529")]
+head(raw_counts)
+
+#add rownames; change row numbers to the gene IDs
+rownames(raw_counts) <- c_e_count$Geneid
+head(raw_counts)
+
+#create desqdataset; countData is the actual data; colData is the metadata for differential expression analysis 
+dds <- DESeqDataSetFromMatrix(countData = raw_counts,
+                              colData = c_e_meta,
+                              design = ~stress_exposure)
+
+#preview
+dds
+dds$sample
+dds$stress_exposure
+
+#Perform the differential expression analysis
+dds <- DESeq(dds)
+
+#Assign the final results to variable final_res
+final_res <- results(dds)
+
+#look at your result
+head(final_res)
+
+#we have a truncated data, let's see the distribution of p-values
+plot(density(x = na.omit(final_res$pvalue)))
+
+#ok let's look at our differentially expressed genes
+plot(x = final_res$log2FoldChange, 
+     y = -log10(final_res$padj),#x is the magnitude of change, y is the distribution of p values 
+     cex = 0.25,#size of characters
+     pch = 19, #shape used 
+     col = 'grey', #color
+     ylim = c(0,20), #y-range 
+     ylab = 'Adjusted P-Value', #label
+     xlab = 'Log2 FC') #label
+     
+     #Generate absolute vertical lines and a horizontal line (h)
+     abline(v = c(-2, 2), h = -log10(0.05), lwd = 0.5, lty = 2)
+     
+     #where are the upregulated (increased genes in the male relative to female)
+     upregulated <- subset(final_res, padj < 0.05 & log2FoldChange > 2) #log2FoldChange is change in magnitude
+     points(upregulated$log2FoldChange,
+            y = -log10(upregulated$padj), 
+            cex = 0.35,
+            pch = 19,
+            col = 'salmon')
+     
+     #where are the downregulated
+     downregulated <- subset(final_res, padj < 0.05 & log2FoldChange < -2)
+     points(downregulated$log2FoldChange,
+            y = -log10(downregulated$padj), 
+            cex = 0.35,
+            pch = 19,
+            col = 'lightblue')
+     
+     mtext('Volcano plot of gene regulation in UV-C stressed Arabidopsis thaliana')
+     #we can merge the two to do a clean and less memory efficient heatmap
+     degs <- rbind(raw_counts[rownames(upregulated),], 
+                   raw_counts[rownames(downregulated),])
+     pheatmap(degs, #T and F are True and False
+              cluster_rows = F,
+              cluster_cols = F,
+              show_rownames = F,
+              scale = 'row',
+              show_colnames = T)
+     #what are the genes that are upregulated
+     rownames(upregulated)
+     rownames(downregulated)
+     
+     #exporting the files
+     write.csv(upregulated, 'upregulated.csv')
+     write.csv(downregulated, 'downregulated.csv')
+     write.csv(raw_counts, 'raw_counts.csv')
+     
+     #Functional Enrichment Analysis
+     # Visit https://bioinformatics.sdstate.edu/go/
 ```
 ## Results
 
