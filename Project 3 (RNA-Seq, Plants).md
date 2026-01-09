@@ -186,9 +186,3 @@ plot(x = final_res$log2FoldChange,
      
      #Functional Enrichment Analysis
      # Visit https://bioinformatics.sdstate.edu/go/
-```
-## Results
-
-## Conclusion
-
-## References
