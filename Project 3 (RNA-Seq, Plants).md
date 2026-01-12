@@ -2,11 +2,12 @@
 ## Introduction
 In this project, analysis of the <i>Arabidopsis thaliana</i> leaf's response to UV stress in the vasculature was conducted using Bash and RStudio. The objectives include the following: 
 1) To perform differential expression analysis in the vasculature of UV treated <i>Arabidopsis thaliana</i> tissues with Water (control) and UV-C light
-2) To express the results via heat maps using RStudio
+2) To express the results via volcano plot and heat map using RStudio
+3) To generate a list of upregulated and downregulated genes as a .csv file
 
 ## Methodology
 ### Dataset
-The data set consisted of 6 samples that were obtained from SRA-Explorer. These samples consisted of 3 replicates that were exposed to water (SRR12808527, SRR12808528, SRR12808529) and UV-C light (SRR12808497, SRR12808498, SRR12808499). A series of pre-processing steps were conducted as follows 
+The data set consisted of 6 samples that were obtained from SRA-Explorer. These samples consisted of 3 replicates that were exposed to water (SRR12808527, SRR12808528, SRR12808529) and UV-C light (SRR12808497, SRR12808498, SRR12808499). A series of pre-processing steps were conducted as follows:
 
 ### FastQC implementation
 ```
@@ -88,40 +89,26 @@ gunzip genome/a_thaliana.gff3.gz
 #run featureCounts
 featureCounts -O -t gene -g ID -a genome/a_thaliana.gff3 -o counts/counts.txt IGV/*.bam
 ```
-The data is then uploaded to RStudio, where Differential Sequencing Analysis (DSeq2) is applied. 
+The data is then saved in a txt file named "counts.txt" and uploaded to RStudio, where Differential Sequencing Analysis (DSeq2) is applied. 
+### Differential Expression Analysis
 ```
-#set working directory
-setwd('/Users/Jopao/Desktop/Graduate School Applications/HackBio/Project 3')
+#Activation of library
+library(DESeq2) 
 
-#libraries
-library(DESeq2) #For Differential Expression Analysis
-library(pheatmap) #For generation of heat map
-
-#count file; files must be found in wd
+#Input of data file "counts.txt" and "metadata.txt" containing the sample names and whether they are control samples or exposed to UV-C
 c_e_count <- read.delim('counts.txt', header = T)
-c_e_meta <- read.delim('metadata.txt', header = T, stringsAsFactors = T)
+c_e_meta <- read.delim('metadata.txt', header = T, stringsAsFactors = T) 
 
-#preview (recheck the first few lines)
-head(c_e_count)
-head(c_e_meta)
-
-#keep to the important columns; only consider columns SRR12808497 to SRR12808529
+#Consider only columns SRR12808497 to SRR12808529
 raw_counts <- c_e_count[, c("SRR12808497", "SRR12808498", "SRR12808499", "SRR12808527", "SRR12808528", "SRR12808529")]
-head(raw_counts)
 
-#add rownames; change row numbers to the gene IDs
+#Row numbers are converted to the gene IDs
 rownames(raw_counts) <- c_e_count$Geneid
-head(raw_counts)
 
-#create desqdataset; countData is the actual data; colData is the metadata for differential expression analysis 
+#Create desqdataset; countData is the actual data; colData is the metadata for differential expression analysis 
 dds <- DESeqDataSetFromMatrix(countData = raw_counts,
                               colData = c_e_meta,
                               design = ~stress_exposure)
-
-#preview
-dds
-dds$sample
-dds$stress_exposure
 
 #Perform the differential expression analysis
 dds <- DESeq(dds)
@@ -129,26 +116,22 @@ dds <- DESeq(dds)
 #Assign the final results to variable final_res
 final_res <- results(dds)
 
-#look at your result
-head(final_res)
-
-#we have a truncated data, let's see the distribution of p-values
+#Check distribution of p-values
 plot(density(x = na.omit(final_res$pvalue)))
 
-#ok let's look at our differentially expressed genes
+#Create Volcano plot of differentially expressed genes
 plot(x = final_res$log2FoldChange, 
-     y = -log10(final_res$padj),#x is the magnitude of change, y is the distribution of p values 
+     y = -log10(final_res$padj),  #x is the magnitude of change, y is the distribution of p values 
      cex = 0.25,#size of characters
      pch = 19, #shape used 
      col = 'grey', #color
      ylim = c(0,20), #y-range 
      ylab = 'Adjusted P-Value', #label
      xlab = 'Log2 FC') #label
-     
-     #Generate absolute vertical lines and a horizontal line (h)
+
      abline(v = c(-2, 2), h = -log10(0.05), lwd = 0.5, lty = 2)
      
-     #where are the upregulated (increased genes in the male relative to female)
+     #Highlight upregulated genes in UV-C compared to control samples 
      upregulated <- subset(final_res, padj < 0.05 & log2FoldChange > 2) #log2FoldChange is change in magnitude
      points(upregulated$log2FoldChange,
             y = -log10(upregulated$padj), 
@@ -156,32 +139,48 @@ plot(x = final_res$log2FoldChange,
             pch = 19,
             col = 'salmon')
      
-     #where are the downregulated
+     #Highlight downregulated genes in UV-C compared to control samples
      downregulated <- subset(final_res, padj < 0.05 & log2FoldChange < -2)
      points(downregulated$log2FoldChange,
             y = -log10(downregulated$padj), 
             cex = 0.35,
             pch = 19,
             col = 'lightblue')
-     
+     #Insert Title
      mtext('Volcano plot of gene regulation in UV-C stressed Arabidopsis thaliana')
-     #we can merge the two to do a clean and less memory efficient heatmap
-     degs <- rbind(raw_counts[rownames(upregulated),], 
-                   raw_counts[rownames(downregulated),])
-     pheatmap(degs, #T and F are True and False
-              cluster_rows = F,
-              cluster_cols = F,
-              show_rownames = F,
-              scale = 'row',
-              show_colnames = T)
-     #what are the genes that are upregulated
-     rownames(upregulated)
-     rownames(downregulated)
-     
-     #exporting the files
-     write.csv(upregulated, 'upregulated.csv')
-     write.csv(downregulated, 'downregulated.csv')
-     write.csv(raw_counts, 'raw_counts.csv')
-     
-     #Functional Enrichment Analysis
-     # Visit https://bioinformatics.sdstate.edu/go/
+```
+A heat map of the upregulated and downregulated genes is then generated as follows:
+### Heat Map Generation
+```
+#Activate library
+library(pheatmap)
+
+#Set degs as input data
+degs <- rbind(raw_counts[rownames(upregulated),], 
+        raw_counts[rownames(downregulated),])
+#Heat map
+pheatmap(degs, #T and F are True and False
+        cluster_rows = F,
+        cluster_cols = F,
+        show_rownames = F,
+        scale = 'row',
+        show_colnames = T)
+```
+The list of upregulated and downregulated genes are then exported as .csv files:
+### Exportation of list of upregulated and downregulated genes
+```
+write.csv(upregulated, 'upregulated.csv')
+write.csv(downregulated, 'downregulated.csv')
+```
+## Results
+The distribution of p-values from the results of the differential expression analysis is shown below: 
+<img width="725" height="585" alt="P" src="https://github.com/user-attachments/assets/4c05c74b-79bf-48df-b3db-49a3da71b0eb" />
+
+The generated volcano plot of the differential expression analysis is shown below. Note that the statistically significant (p < 0.05) upregulated genes in UV-C exposed samples are highlighted as pink and the statistically significant downregulated genes in UV-C exposed samples are highlighted as blue. Note that log2FC refers to the log2 Fold Change or the magnitude of change in gene expression. 
+<img width="725" height="585" alt="Volcano Plot" src="https://github.com/user-attachments/assets/6c7b4186-0551-4c3d-9fb7-5621853ac3cd" />
+
+The produced heat map for each sample ID is presented below. Recall that samples exposed to UV-C light include SRR12808497, SRR12808498, and SRR12808499, while control samples exposed to water include SRR12808527, SRR12808528, and SRR12808529. It can be noticed that a larger proportion of genes are upregulated in UV-C exposed samples compared to their downregulated counterparts. 
+<img width="725" height="585" alt="Heat_Map" src="https://github.com/user-attachments/assets/a949538e-1acf-4e03-aa1c-eae0bedc713f" />
+
+## Recommendations 
+Further studies of this project may consider Functional Enrichment Analysis to determine the top 100 upregulated genes in the UV-C exposed samples. 
