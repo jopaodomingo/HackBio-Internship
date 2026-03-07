@@ -184,3 +184,6 @@ The produced heat map for each sample ID is presented below. Recall that samples
 
 ## Recommendations 
 Further studies of this project may consider Functional Enrichment Analysis to determine the top 100 upregulated genes in the UV-C exposed samples. 
+
+## References
+The general form of the BAsh and R scripts were obtained from the HackBio modules, and altered to fit the needs of the project.
