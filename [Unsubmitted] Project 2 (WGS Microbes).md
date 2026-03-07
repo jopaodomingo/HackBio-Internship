@@ -108,3 +108,5 @@ According to Ishihara and Akazawa (2023), the typical medications against lister
 Ishihara, Y., & Akazawa, K. (2023). Treatment of Listeria monocytogenes bacteremia with oral levofloxacin in an immunocompromised patient. IDCases, 31, e01680.
 
 Pandey, N., & Cascella, M. (2023). Beta-lactam antibiotics. https://www.ncbi.nlm.nih.gov/books/NBK545311/#:~:text=Resistance%20to%20beta%2Dlactams%20is,space%20through%20specific%20pumping%20mechanisms 
+
+The general form of the BAsh scripts were obtained from the HackBio modules, and altered to fit the needs of the project.
