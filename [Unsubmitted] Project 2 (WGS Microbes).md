@@ -8,7 +8,7 @@ In this project, we will be using Whole-Genome Sequencing (WGS) to analyze data 
 
 ## Methods
 ### Dataset
-The data set was obtained from a subset of 100 samples. Downsizing to 50 samples was done due to time constraints. Data was downloading from the following site: https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR270/016/SRR27013316/ using the curl command and stored in a directory entitled "raw_reads". Samples used include SRR27013147, SRR27013245, SRR27013246,..., SRR27013292, SRR27013293. 
+The data set was obtained from a subset of 100 samples. Downsizing to 50 samples was done due to time constraints. Data was downloaded from the following site: https://ftp.sra.ebi.ac.uk/vol1/fastq/SRR270/016/SRR27013316/ using the curl command and stored in a directory entitled "raw_reads". Samples used include SRR27013147, SRR27013245, SRR27013246,..., SRR27013292, SRR27013293. 
 
 ### FastQC implementation
 > nano run_fastQC.sh
